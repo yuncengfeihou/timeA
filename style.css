@@ -222,3 +222,43 @@
     display: none; /* Initially hidden */
     border-top: none; /* Avoid double border */
 }
+
+/* 角色统计表格样式 */
+.usage-tracker-settings .char-stats-container {
+    margin: 10px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 5px;
+}
+
+.usage-tracker-settings .char-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.usage-tracker-settings .char-stats-table th,
+.usage-tracker-settings .char-stats-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--SmartThemeBorderColor);
+}
+
+.usage-tracker-settings .char-stats-table th {
+    background-color: rgba(var(--accentColorRGB), 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.usage-tracker-settings .char-stats-table tr:hover {
+    background-color: rgba(var(--accentColorRGB), 0.05);
+}
+
+.usage-tracker-settings .char-stats-table .no-data {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: var(--SmartThemeBodyDeemphasizedColor);
+}
