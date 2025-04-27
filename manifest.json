@@ -1,0 +1,11 @@
+{
+    "display_name": "每日使用统计A1.0",
+    "loading_order": 4,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "AI Assistant & Your Name",
+    "version": "1.0.0",
+    "homePage": ""
+}
