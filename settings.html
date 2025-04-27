@@ -2,15 +2,47 @@
     <!-- 创建唯一的顶层抽屉，命名为 Time Pro 设置 -->
     <div class="inline-drawer">
         <div class="inline-drawer-toggle inline-drawer-header">
-            <b>Time Pro 设置 (连续时长/固定时间提醒)</b> <!-- 更新标题以区分 -->
+            <b>Time Pro 设置</b> <!-- 这里是新的顶层标题 -->
             <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
         </div>
         <div class="inline-drawer-content"> <!-- 所有设置项都放在这个 content 区域 -->
 
+            <!-- 新增：角色使用统计 -->
+            <h4>角色使用统计</h4>
+            <div class="usage-tracker_block flex-container">
+                <label for="usageTracker_enableCharStats">启用统计:</label>
+                <input type="checkbox" id="usageTracker_enableCharStats" checked>
+            </div>
+            <div class="usage-tracker_block flex-container">
+                <label for="usageTracker_statsDate">选择日期:</label>
+                <input type="date" id="usageTracker_statsDate" class="text_pole">
+                <button id="usageTracker_refreshStats" class="menu_button"><i class="fa-solid fa-rotate"></i> 刷新</button>
+            </div>
+            <div class="usage-tracker_block">
+                <div class="char-stats-container">
+                    <table id="usageTracker_statsTable" class="char-stats-table">
+                        <thead>
+                            <tr>
+                                <th>角色/群组</th>
+                                <th>类型</th>
+                                <th>时长</th>
+                                <th>用户消息数</th>
+                                <th>AI消息数</th>
+                                <th>总tokens</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 统计数据会通过JS动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr class="sysHR"> <!-- 分隔线 -->
+
             <!-- 原 "通用设置" 内容 -->
             <h4>通用设置</h4> <!-- 使用 h4 作为内部子标题 -->
             <div class="usage-tracker_block flex-container">
-                <label for="usageTracker_enabled">启用提醒功能:</label> <!-- 改为提醒功能 -->
+                <label for="usageTracker_enabled">启用插件:</label>
                 <input type="checkbox" id="usageTracker_enabled" checked>
             </div>
             <div class="usage-tracker_block flex-container">
