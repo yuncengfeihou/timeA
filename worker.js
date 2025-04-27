@@ -1,19 +1,18 @@
 // worker.js - Statistics Calculation and Tracking Logic
 
-// --- START: Include db.js content here if not using modules ---
-// Or use: importScripts('db.js'); // If db.js is in the same directory
-// (Copy-paste the content of db.js here for simplicity in this example)
-const DB_NAME = 'SillyTavernUsageStatsDB';
-const STORE_NAME = 'dailyStatsStore';
-const DB_VERSION = 1;
+// --- OPTION 1: Use importScripts (Common for non-module workers) ---
+try {
+    importScripts('db.js'); // Assumes db.js is in the same directory
+} catch (e) {
+    console.error("Worker: Failed to import db.js. Make sure it's in the same directory.", e);
+    // Define dummy functions to prevent errors later, or terminate worker?
+    self.initDB = async () => { throw new Error("DB not loaded"); };
+    self.getStats = async () => { throw new Error("DB not loaded"); };
+    self.saveStats = async () => { throw new Error("DB not loaded"); };
+}
 
-let dbPromise = null;
-
-function initDB() { /* ... db.js content ... */ }
-async function getStats(dateString) { /* ... db.js content ... */ }
-async function saveStats(dateString, statsData) { /* ... db.js content ... */ }
-// --- END: Include db.js content ---
-
+// --- OPTION 2: Copy-paste db.js content here ---
+// const DB_NAME = 'SillyTavernUsageStatsDB'; ... etc ...
 
 // --- Worker State ---
 let currentEntityId = null; // character avatar filename or group id
@@ -50,9 +49,9 @@ function ensureEntityStats(entityId, entityName, entityType) {
             msgReceived: 0,
             tokensUsed: 0,
         };
-        console.log(`Worker: Initialized stats for ${entityType} ${entityName} (${entityId})`);
+        // console.log(`Worker: Initialized stats for ${entityType} ${entityName} (${entityId})`);
     }
-     // Update name/type if it was missing or changed
+    // Update name/type if it was missing or changed (important!)
     if (entityName && dailyStats[entityId].name !== entityName) dailyStats[entityId].name = entityName;
     if (entityType && dailyStats[entityId].type !== entityType) dailyStats[entityId].type = entityType;
     return dailyStats[entityId];
@@ -73,61 +72,58 @@ function checkDate() {
 function updateUserActivity() {
     isUserActive = true;
     lastActivityTimestamp = Date.now();
-    // console.log("Worker: User activity detected.");
-    checkTimerState(); // Re-evaluate timer based on new activity
+    checkTimerState();
 
     // Set a timeout to mark as inactive
     setTimeout(() => {
         if (Date.now() - lastActivityTimestamp >= ACTIVITY_TIMEOUT_MS) {
             if (isUserActive) {
-                 console.log("Worker: User inactive due to timeout.");
-                 isUserActive = false;
-                 checkTimerState(); // Stop timer if inactive
+                // console.log("Worker: User inactive due to timeout.");
+                isUserActive = false;
+                checkTimerState();
             }
         }
-    }, ACTIVITY_TIMEOUT_MS + 100); // Check slightly after timeout
+    }, ACTIVITY_TIMEOUT_MS + 100);
 }
 
 function startTimer() {
-    if (activeTimerIntervalId) return; // Already running
+    if (activeTimerIntervalId) return;
 
-    checkDate(); // Ensure we are tracking for the correct day
+    checkDate();
 
     activeTimerIntervalId = setInterval(() => {
-        checkDate(); // Check date periodically
+        checkDate();
 
         const shouldTrack = currentEntityId && isTabVisible && isUserActive;
         if (shouldTrack) {
-            const stats = ensureEntityStats(currentEntityId, null, currentEntityType); // Name might not be known here initially
-            if (stats) {
-                 stats.onlineTimeSeconds += TIMER_INTERVAL_MS / 1000;
-                 // console.log(`Worker: Tracked ${TIMER_INTERVAL_MS / 1000}s for ${currentEntityId}. Total: ${stats.onlineTimeSeconds}`);
+            // Pass current name/type when ensuring stats, in case it changed
+            const currentStats = ensureEntityStats(currentEntityId, null, currentEntityType); // Rely on ensureEntityStats to update if needed later
+            if (currentStats) {
+                currentStats.onlineTimeSeconds += TIMER_INTERVAL_MS / 1000;
             }
         }
 
-        // Also check for inactivity within the timer itself
         if (isUserActive && (Date.now() - lastActivityTimestamp >= ACTIVITY_TIMEOUT_MS)) {
-             console.log("Worker: User inactive detected in timer.");
-             isUserActive = false;
-             checkTimerState(); // This will clear the interval
+            // console.log("Worker: User inactive detected in timer.");
+            isUserActive = false;
+            checkTimerState();
         }
 
     }, TIMER_INTERVAL_MS);
-    console.log("Worker: Tracking timer started.");
+    // console.log("Worker: Tracking timer started.");
 }
 
 function stopTimer() {
     if (activeTimerIntervalId) {
         clearInterval(activeTimerIntervalId);
         activeTimerIntervalId = null;
-        console.log("Worker: Tracking timer stopped.");
-        saveCurrentStats(); // Save stats when timer stops (e.g., chat change, inactive)
+        // console.log("Worker: Tracking timer stopped.");
+        saveCurrentStats(); // Save stats when timer stops
     }
 }
 
 function checkTimerState() {
     const shouldBeRunning = currentEntityId && isTabVisible && isUserActive;
-    // console.log(`Worker: Check timer state - ShouldRun: ${shouldBeRunning}, CurrentID: ${currentEntityId}, Visible: ${isTabVisible}, Active: ${isUserActive}`);
     if (shouldBeRunning && !activeTimerIntervalId) {
         startTimer();
     } else if (!shouldBeRunning && activeTimerIntervalId) {
@@ -137,9 +133,8 @@ function checkTimerState() {
 
 async function saveCurrentStats() {
     try {
-        // console.log("Worker: Attempting to save stats to IndexedDB for", currentDate);
+        // Use the globally available saveStats function (from db.js)
         await saveStats(currentDate, dailyStats);
-        // console.log("Worker: Stats saved successfully.");
     } catch (error) {
         console.error("Worker: Failed to save stats to IndexedDB:", error);
     }
@@ -148,70 +143,65 @@ async function saveCurrentStats() {
 function startSavingInterval() {
     if (saveDataIntervalId) return;
     saveDataIntervalId = setInterval(saveCurrentStats, SAVE_INTERVAL_MS);
-    console.log("Worker: Periodic saving enabled.");
+    // console.log("Worker: Periodic saving enabled.");
 }
 
 function stopSavingInterval() {
      if (saveDataIntervalId) {
         clearInterval(saveDataIntervalId);
         saveDataIntervalId = null;
-        console.log("Worker: Periodic saving disabled.");
+        // console.log("Worker: Periodic saving disabled.");
      }
 }
 
-
 async function loadInitialStats() {
     try {
-        console.log("Worker: Loading initial stats for date:", currentDate);
+        // console.log("Worker: Loading initial stats for date:", currentDate);
+        // Use the globally available getStats function (from db.js)
         const loadedStats = await getStats(currentDate);
         if (loadedStats) {
             dailyStats = loadedStats;
-            console.log("Worker: Loaded stats from IndexedDB:", dailyStats);
+            // console.log("Worker: Loaded stats from IndexedDB:", dailyStats);
         } else {
             dailyStats = {};
-            console.log("Worker: No stats found for today in IndexedDB. Starting fresh.");
+            // console.log("Worker: No stats found for today in IndexedDB. Starting fresh.");
         }
-        // After loading, potentially send to main thread if requested at init
         postMessage({ type: 'statsUpdated', date: currentDate, stats: dailyStats });
     } catch (error) {
         console.error("Worker: Failed to load initial stats:", error);
-        dailyStats = {}; // Ensure it's an empty object on error
+        dailyStats = {};
     }
 }
 
 // --- Message Handling ---
 self.onmessage = async (event) => {
     const { type, payload } = event.data;
-    // console.log("Worker received message:", type, payload);
 
     switch (type) {
         case 'init':
             isTabVisible = payload.isTabVisible;
-            await loadInitialStats();
+            await loadInitialStats(); // Load before starting intervals
             startSavingInterval();
-            checkTimerState(); // Initial check
+            checkTimerState();
             break;
 
         case 'chatChanged':
-            stopTimer(); // Stops timer and saves stats for the previous entity
+            stopTimer();
             currentEntityId = payload.entityId;
             currentEntityType = payload.entityType;
-            // Ensure stats object exists for the new entity, passing name/type
+            // Ensure stats object exists for the new entity, providing name/type
             ensureEntityStats(currentEntityId, payload.entityName, payload.entityType);
             isUserActive = true; // Assume active on chat change
             lastActivityTimestamp = Date.now();
-            checkTimerState(); // Start timer if conditions met
+            checkTimerState();
             break;
 
         case 'visibilityChanged':
             isTabVisible = payload.isVisible;
             if (!isTabVisible) {
-                 // If tab becomes hidden, force user inactive state until next activity
-                 isUserActive = false;
-                 console.log("Worker: Tab hidden, marking inactive.");
+                 isUserActive = false; // Force inactive on hide
             } else {
-                 // If tab becomes visible, check activity status again
-                 updateUserActivity(); // Trigger an activity check
+                 updateUserActivity(); // Check activity on visible
             }
             checkTimerState();
             if (!isTabVisible) {
@@ -223,49 +213,33 @@ self.onmessage = async (event) => {
             updateUserActivity();
             break;
 
-        case 'messageSent': {
-            checkDate();
-            const stats = ensureEntityStats(payload.entityId, payload.entityName, payload.entityType);
-            if (stats) {
-                stats.msgSent += 1;
-                // console.log(`Worker: Message sent recorded for ${payload.entityId}`);
-            }
-            break;
-        }
-        case 'messageReceived': {
-             checkDate();
-            const stats = ensureEntityStats(payload.entityId, payload.entityName, payload.entityType);
-            if (stats) {
-                stats.msgReceived += 1;
-                // console.log(`Worker: Message received recorded for ${payload.entityId}`);
-            }
-            break;
-        }
+        case 'messageSent':
+        case 'messageReceived':
         case 'tokenCount': {
-             checkDate();
+            checkDate();
+            // Ensure stats object exists, updating name/type if provided
             const stats = ensureEntityStats(payload.entityId, payload.entityName, payload.entityType);
             if (stats) {
-                stats.tokensUsed += payload.count;
-                 // console.log(`Worker: Tokens (${payload.count}) recorded for ${payload.entityId}. Total: ${stats.tokensUsed}`);
+                 if (type === 'messageSent') stats.msgSent += 1;
+                 else if (type === 'messageReceived') stats.msgReceived += 1;
+                 else if (type === 'tokenCount') stats.tokensUsed += payload.count;
             }
             break;
         }
+
         case 'requestStats':
             checkDate();
-            // Optionally reload from DB before sending? Or just send in-memory version?
-            // Sending in-memory is faster, assuming it's reasonably up-to-date.
-            // For manual refresh, maybe reload from DB first for absolute certainty.
             try {
-                const reloadedStats = await getStats(payload.date); // Get specified date's stats
+                // Use the globally available getStats function (from db.js)
+                const reloadedStats = await getStats(payload.date);
                 postMessage({ type: 'statsUpdated', date: payload.date, stats: reloadedStats || {} });
             } catch (error) {
                  console.error("Worker: Error reloading stats for request:", error);
-                 postMessage({ type: 'statsUpdated', date: payload.date, stats: (payload.date === currentDate ? dailyStats : {}) }); // Send in-memory or empty
+                 postMessage({ type: 'statsUpdated', date: payload.date, stats: (payload.date === currentDate ? dailyStats : {}) });
             }
-
             break;
 
-        case 'forceSave': // Could be triggered by main thread on beforeunload
+        case 'forceSave':
             await saveCurrentStats();
             break;
 
@@ -275,5 +249,4 @@ self.onmessage = async (event) => {
 };
 
 // Initial setup when worker starts
-console.log("Worker started.");
-// initDB(); // DB init is now lazy within the functions
+// console.log("Worker started."); // Less console noise
