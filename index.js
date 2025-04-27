@@ -15,6 +15,10 @@ import {
     renderExtensionTemplateAsync
 } from '../../../extensions.js';
 
+import {
+    getTokenCountAsync,
+} from '../../../tokenizers.js';
+
 // We might not need Popups for this specific feature, but good to have if needed later
 // import { Popup, POPUP_TYPE, callGenericPopup } from '../../../popup.js';
 
