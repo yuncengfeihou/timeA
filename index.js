@@ -322,7 +322,7 @@ function throttle(func, limit) {
              .replace(/&/g, "&")
              .replace(/</g, "<")
              .replace(/>/g, ">")
-             .replace(/"/g, """)
+             .replace(/"/g, '"')
              .replace(/'/g, "'");
      }
 
