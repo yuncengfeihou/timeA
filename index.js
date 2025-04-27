@@ -37,7 +37,7 @@ function throttle(func, limit) {
 
 
 (function () {
-    const extensionName = "UsageStatsWorkerDB"; // Match folder name if different
+    const extensionName = "timeA"; // Match folder name if different
     const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`; // Adjust if needed
     let worker = null;
     let charactersCache = []; // Cache for character names
