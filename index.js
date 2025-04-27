@@ -799,7 +799,3 @@ function escapeHtml(unsafe) {
     });
 
 })();
-        }
-    });
-
-})();
