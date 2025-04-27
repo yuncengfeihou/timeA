@@ -5,7 +5,6 @@ import {
     saveSettingsDebounced, // We might not use this if IndexedDB is fully separate
     eventSource,
     event_types,
-    getTokenCountAsync, // Crucial for token counting
 } from '../../../../script.js'; // Adjust path based on your SillyTavern structure
 
 import {
@@ -16,7 +15,7 @@ import {
 } from '../../../extensions.js';
 
 import {
-    getTokenCountAsync,
+    getTokenCountAsync, // Crucial for token counting
 } from '../../../tokenizers.js';
 
 // We might not need Popups for this specific feature, but good to have if needed later
