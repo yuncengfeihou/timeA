@@ -1,3 +1,105 @@
+/* --- Styles from Original Timer Plugin --- */
+.usage-tracker-settings .usage-tracker_block {
+    margin-bottom: 10px;
+    align-items: center; /* Vertically center items in flex containers */
+}
+
+.usage-tracker-settings label {
+    margin-right: 10px;
+    min-width: 150px; /* Ensure labels align */
+    display: inline-block;
+}
+
+.usage-tracker-settings input[type="number"],
+.usage-tracker-settings input[type="time"],
+.usage-tracker-settings select {
+    flex-grow: 1; /* Allow inputs/selects to take available space */
+    margin-right: 10px;
+}
+
+.usage-tracker-settings .text_pole {
+    max-width: 100px; /* Limit width of number inputs */
+}
+
+/* Adjust selector to be specific to the timer threshold list */
+.usage-tracker-settings #usageTracker_durationThresholdsList,
+.usage-tracker-settings #usageTracker_fixedTimesList {
+    margin-bottom: 15px;
+    padding-left: 20px;
+    border-left: 1px solid var(--SmartThemeBorderColor);
+}
+
+/* Adjust selector to be specific to the timer threshold list */
+.usage-tracker-settings #usageTracker_durationThresholdsList .threshold-item,
+.usage-tracker-settings #usageTracker_fixedTimesList .threshold-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--SmartThemeBorderColor);
+}
+.usage-tracker-settings #usageTracker_durationThresholdsList .threshold-item:last-child,
+.usage-tracker-settings #usageTracker_fixedTimesList .threshold-item:last-child {
+    border-bottom: none;
+}
+
+.usage-tracker-settings .threshold-item span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* Target ONLY delete buttons within timer threshold lists */
+.usage-tracker-settings .threshold-list .threshold-item .menu_button {
+    padding: 2px 8px;
+    font-size: 0.8em;
+    background-color: var(--DangerColor); /* Use theme's danger color */
+    flex-shrink: 0;      /* Prevent delete button compression */
+    width: auto;         /* Force width based on content */
+    white-space: nowrap; /* Prevent icon wrapping */
+    margin-left: 5px; /* Add space between checkbox and button */
+}
+.usage-tracker-settings .threshold-list .threshold-item .menu_button:hover {
+    background-color: var(--DangerColorHover);
+}
+
+/* Ensure the div containing checkbox/button in timer lists behaves */
+.usage-tracker-settings .threshold-list .threshold-item > div {
+    flex-shrink: 0; /* Prevent this container from shrinking */
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Push to the right */
+}
+
+
+.usage-tracker-settings #usageTracker_requestNotifyPermission {
+    margin-left: 10px;
+    flex-grow: 0; /* Don't let the button grow */
+    padding: 5px 10px;
+}
+
+.usage-tracker-settings small {
+    margin-left: 10px;
+    opacity: 0.7;
+}
+
+.usage-tracker-settings h4 {
+    margin-top: 20px; /* Space above subheadings */
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.usage-tracker-settings h3 { /* Space below main drawer title */
+     margin-bottom: 15px;
+}
+
+/* Target buttons directly under .flex-container within timer settings */
+.usage-tracker-settings .flex-container > .menu_button {
+    flex-shrink: 0;      /* Prevent button compression */
+    width: auto;         /* Force width based on content */
+    white-space: nowrap; /* Prevent text/icon wrapping */
+}
+
+
+/* --- Styles for New Stats Table Plugin --- */
 .usage-stats-container {
     margin-top: 20px;
     padding: 15px;
@@ -20,10 +122,21 @@
 
 .usage-stats-controls label {
      min-width: fit-content; /* Prevent label from taking too much space */
+     margin-right: 5px; /* Add small margin */
 }
 
 .usage-stats-controls #usage-stats-date-picker {
      flex-grow: 0; /* Don't let date picker grow excessively */
+     margin-right: 5px;
+     max-width: 150px; /* Limit date picker width */
+}
+/* Style refresh button specifically in stats area */
+.usage-stats-controls #usage-stats-refresh-button {
+    padding: 5px 10px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: auto;
+    white-space: nowrap;
 }
 
 
@@ -44,6 +157,7 @@
     padding: 8px 10px;
     text-align: left;
     vertical-align: middle;
+    white-space: nowrap; /* Prevent wrapping in table cells */
 }
 
 #usage-stats-table th {
@@ -59,6 +173,7 @@
 
 #usage-stats-table tbody td:nth-child(1) { /* Name column potentially wider */
     /* min-width: 150px; */
+    white-space: normal; /* Allow name column to wrap if needed */
 }
 
 #usage-stats-table tbody td:nth-child(3), /* Numeric columns aligned right */
@@ -67,4 +182,43 @@
 #usage-stats-table td:nth-child(6) {
     text-align: right;
     font-family: monospace; /* Use monospace for numbers */
+}
+
+/* Make sure inline drawers work */
+.inline-drawer {
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    background-color: var(--SmartThemeBodyColor); /* Match theme */
+}
+
+.inline-drawer-toggle {
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--SmartThemeSidebarBg); /* Slightly different bg */
+    border-bottom: 1px solid var(--SmartThemeBorderColor);
+}
+.inline-drawer-toggle:hover {
+    background-color: var(--SmartThemeHoverColor);
+}
+
+.inline-drawer-icon {
+    transition: transform 0.3s ease;
+}
+
+.inline-drawer-icon.down {
+    transform: rotate(0deg);
+}
+
+.inline-drawer-icon.up {
+    transform: rotate(-180deg);
+}
+
+.inline-drawer-content {
+    padding: 15px;
+    display: none; /* Initially hidden */
+    border-top: none; /* Avoid double border */
 }
