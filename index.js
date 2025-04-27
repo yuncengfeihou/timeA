@@ -46,7 +46,7 @@ function escapeHtml(unsafe) {
 
 (function () {
     // --- Plugin Setup ---
-    const pluginName = "TimeProUsageStats"; // Unified name
+    const pluginName = "timeA"; // Unified name
     const timerSettingsKey = "usage-tracker2"; // Keep original key for timer settings compatibility
     const extensionFolderPath = `scripts/extensions/third-party/${pluginName}`; // Adjust if folder name differs
     const pluginLogPrefix = `[${pluginName}]`;
