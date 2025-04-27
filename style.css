@@ -262,3 +262,17 @@
     font-style: italic;
     color: var(--SmartThemeBodyDeemphasizedColor);
 }
+
+/* 统计表格总计行样式 */
+.usage-tracker-settings .stats-total-row {
+    border-top: 2px solid var(--SmartThemeBorderColor);
+    background-color: rgba(var(--accentColorRGB), 0.05);
+}
+
+/* 当没有数据时的样式 */
+.usage-tracker-settings .char-stats-table .no-data {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: var(--SmartThemeBodyDeemphasizedColor);
+}
