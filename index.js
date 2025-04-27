@@ -5,12 +5,12 @@ import {
     saveSettingsDebounced, // We might not use this if IndexedDB is fully separate
     eventSource,
     event_types,
-    getContext,
     getTokenCountAsync, // Crucial for token counting
 } from '../../../../script.js'; // Adjust path based on your SillyTavern structure
 
 import {
     extension_settings,
+    getContext,
     loadExtensionSettings,
     renderExtensionTemplateAsync
 } from '../../../extensions.js';
