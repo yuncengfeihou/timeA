@@ -17,7 +17,7 @@ function initDB() {
         };
 
         request.onsuccess = (event) => {
-            console.log('IndexedDB initialized successfully.');
+            // console.log('IndexedDB initialized successfully.'); // Less console noise
             resolve(event.target.result);
         };
 
@@ -26,10 +26,10 @@ function initDB() {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(STORE_NAME)) {
                 // Key is the date string 'YYYY-MM-DD'
+                // Store objects like: { date: 'YYYY-MM-DD', stats: { entityId1: {...}, ... } }
                 db.createObjectStore(STORE_NAME, { keyPath: 'date' });
                 console.log(`Object store "${STORE_NAME}" created.`);
             }
-            // Add indexes here if needed in the future
         };
     });
     return dbPromise;
@@ -48,8 +48,7 @@ async function getStats(dateString) {
         };
 
         request.onsuccess = (event) => {
-            // request.result will be the object { date: 'YYYY-MM-DD', stats: {...} } or undefined
-            resolve(request.result ? request.result.stats : null);
+            resolve(request.result ? request.result.stats : null); // Return only the stats part or null
         };
     });
 }
@@ -59,7 +58,6 @@ async function saveStats(dateString, statsData) {
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(STORE_NAME, 'readwrite');
         const store = transaction.objectStore(STORE_NAME);
-        // Data structure to store: { date: 'YYYY-MM-DD', stats: { entityId1: {...}, entityId2: {...} } }
         const dataToSave = { date: dateString, stats: statsData };
         const request = store.put(dataToSave); // put = insert or update
 
@@ -69,12 +67,11 @@ async function saveStats(dateString, statsData) {
         };
 
         request.onsuccess = (event) => {
-            // console.log('Stats saved successfully for date:', dateString);
+            // console.log('Stats saved successfully for date:', dateString); // Less console noise
             resolve(event.target.result);
         };
     });
 }
 
-// Export functions if using modules, otherwise they are globally available
-// after importScripts in the worker, or copy-paste the content.
-// export { initDB, getStats, saveStats }; // For module usage
+// For non-module workers, these functions are global after importScripts or copy-paste.
+// If using Module Workers: export { initDB, getStats, saveStats };
