@@ -1,0 +1,70 @@
+.usage-stats-container {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 5px;
+}
+
+.usage-stats-container h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.usage-stats-controls {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds space between elements */
+}
+
+.usage-stats-controls label {
+     min-width: fit-content; /* Prevent label from taking too much space */
+}
+
+.usage-stats-controls #usage-stats-date-picker {
+     flex-grow: 0; /* Don't let date picker grow excessively */
+}
+
+
+.usage-stats-table-wrapper {
+    max-height: 400px; /* Limit height and add scroll */
+    overflow-y: auto;
+    border: 1px solid var(--SmartThemeBorderColor);
+}
+
+#usage-stats-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove gaps between cells */
+}
+
+#usage-stats-table th,
+#usage-stats-table td {
+    border: 1px solid var(--SmartThemeBorderColor);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#usage-stats-table th {
+    background-color: var(--SmartThemeBodyColor); /* Use theme color */
+    position: sticky; /* Make header sticky */
+    top: 0;
+    z-index: 1;
+}
+
+#usage-stats-table tbody tr:nth-child(even) {
+    background-color: var(--SmartThemeSidebarBg); /* Zebra striping */
+}
+
+#usage-stats-table tbody td:nth-child(1) { /* Name column potentially wider */
+    /* min-width: 150px; */
+}
+
+#usage-stats-table tbody td:nth-child(3), /* Numeric columns aligned right */
+#usage-stats-table td:nth-child(4),
+#usage-stats-table td:nth-child(5),
+#usage-stats-table td:nth-child(6) {
+    text-align: right;
+    font-family: monospace; /* Use monospace for numbers */
+}
