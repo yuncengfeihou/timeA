@@ -3,7 +3,7 @@ import { saveSettingsDebounced, eventSource, event_types, getRequestHeaders } fr
 import { getContext } from "../../../extensions.js";
 
 (function () {
-    const extensionName = "usage-tracker2";
+    const extensionName = "timeA";
     const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
 
     // LocalStorage Keys
